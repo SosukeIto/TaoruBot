@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
+import discord
 from discord.ext import commands
 from discord import Embed, Forbidden, Game,AllowedMentions
 from threading import Thread
-from aiosqlite import connect
+from sqlite3 import connect
 from asyncio import new_event_loop
 import asyncio
 from traceback import format_exc
@@ -12,7 +13,8 @@ loop = new_event_loop()
 
 
 async def run():
-    bot = MyBot()
+    sqlite_list = []
+    bot = MyBot(sqlite_list=sqlite_list)
     try:
         if not os.path.exists("./all_data/taoru.db"):
             open(f"./all_data/taoru.db", "w").close() 
@@ -26,16 +28,15 @@ async def run():
         await bot.start(token) 
     except:
        print("エラー情報\n" + format_exc())
-       await bot.get_channel(817964124369584128).send("エラー情報```py\n" + traceback.format_exc() + "\n```")
        return
 
 class MyBot(commands.Bot):
     def __init__(self, **kwargs):
         super().__init__(command_prefix=commands.when_mentioned_or(prefix), allowed_mentions=AllowedMentions(everyone=False, users=False, roles=False), fetch_offline_members=False, pm_help=None, help_attrs=dict(hidden=True), loop=loop)
-
+        self.ready = None
+        self.sqlite_list = kwargs.pop("sqlite_list")
         self.remove_command('help') 
         [self.load_extension(f'command.{c}') for c in ["command"]] 
-
 
     async def on_ready(self): 
         try: 
@@ -45,7 +46,16 @@ class MyBot(commands.Bot):
            print("エラー情報\n" + format_exc())
            await bot.get_channel(817964124369584128).send("エラー情報```py\n" + traceback.format_exc() + "\n```")
            return
+        self.ready = True
 
+
+    async def on_command_error(self, ctx, error):
+        if not self.ready:
+            return
+        if isinstance(error, commands.CommandNotFound):
+            return
+        if isinstance(error, commands.NoPrivateMessage):
+            return
 
 if __name__ == '__main__':
     main_task = loop.create_task(run())

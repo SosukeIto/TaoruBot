@@ -1,6 +1,6 @@
 import json
 
-# ./all_data/setting.json����ۑ����Ă���token��prefix��擾���܂��B
+
 with open(r'./all_data/setting.json', encoding='utf-8') as fh:
     json_txt = fh.read()
     json_txt = str(json_txt).replace("'", '"').replace('True', 'true').replace('False', 'false')
