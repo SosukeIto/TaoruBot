@@ -51,7 +51,7 @@ class command(commands.Cog):
                   try:
                       msg_react = await self.bot.wait_for('message', check=lambda m:m.channel == ctx.channel and m.author.id == 526620171658330112 or m.author == ctx.author, timeout=30)
                   except asyncio.TimeoutError:
-                      if not ctx.author.voice:
+                      if not ctx.author.voice.channel:
                         if ctx.guild.voice_client:
                           return await ctx.guild.voice_client.disconnect()
                         else:return
