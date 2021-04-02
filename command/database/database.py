@@ -36,14 +36,9 @@ async def get_player_audio(ctx, user_id, conn, cur):
             return "20", "3", "11", "17", "8", "19"
         return str(sounds[0]), str(sounds[1]), str(sounds[2]), str(sounds[3]), str(sounds[4]), str(sounds[5])
 
-def order_sound(ctx, num):
+def order_sound(ctx,num):
    s_path = f"./sampleaudio/{num}.mp3"
    ctx.guild.voice_client.play(
            discord.FFmpegPCMAudio(
                executable=r"C:/Users/81808/AppData/Local/Programs/ffmpeg/bin/ffmpeg.exe",
                source=s_path), after=lambda e: print(f"{ctx.channel.name}: {ctx.author.name}", e))
-
-
-
-
-

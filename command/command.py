@@ -5,13 +5,11 @@ import random
 import json
 import traceback
 import asyncio
-from .database import database
+from command.database import database
 from PIL import Image
 from discord.ext import commands
 from discord import Embed, NotFound, Forbidden
 from all_data.all_data import admin_list, prefix
-
-
 
 class command(commands.Cog):
     def __init__(self, bot):
@@ -259,7 +257,7 @@ class command(commands.Cog):
                    await msg_c.edit(content = contents[2])
                    return
                 else:
-                    order_sound(ctx,msg_react.content)
+                    database.order_sound(ctx,msg_react.content)
                     msg = await ctx.send(f":robot: | ♪🎶♪♬♪")
                     await asyncio.sleep(2)
                     await msg_react.delete()
